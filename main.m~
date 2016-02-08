@@ -5,7 +5,6 @@
 	data_read = csvread('nifty50.csv');
 	fprintf(strcat("Read", num2str(size(data_read, 1)), " rows"));
 
-
 	% Skip the date column, volume and change%
 	% Skip the first row since it contains the column headers
 

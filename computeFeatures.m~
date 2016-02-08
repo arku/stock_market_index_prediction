@@ -47,7 +47,7 @@ function featureVector = computeFeatures(data, days)
   %fprintf("Size of exponential moving average is:");
 
   size(exp_mov_avg);
-  featureVector = [simple_mov_avg, exp_mov_avg];
+  %featureVector = [simple_mov_avg, exp_mov_avg];
 
   %  ***********************************************
   %   3. Code for computing Momentum
@@ -65,7 +65,7 @@ function featureVector = computeFeatures(data, days)
   momentum = [momentum;zeros(days-1,1)];
 
   % Add momentum to the feature vector
-  featureVector = [simple_mov_avg, exp_mov_avg, momentum];
+  %featureVector = [simple_mov_avg, exp_mov_avg, momentum];
 
 
   %  ***********************************************
@@ -81,8 +81,8 @@ function featureVector = computeFeatures(data, days)
   %stochastic_k(1)
 
   % Add stochastic_k to the feature vector
-  featureVector = [simple_mov_avg, exp_mov_avg, momentum, stochastic_k];
-  size(featureVector);
+  %featureVector = [simple_mov_avg, exp_mov_avg, momentum, stochastic_k];
+  %size(featureVector);
 
   %  ***********************************************
   %   5. Code for computing stochastic D%
@@ -96,7 +96,7 @@ function featureVector = computeFeatures(data, days)
   %mean(stochastic_k(12:21,1)) == stochastic_d(12)
 
   % Add stochastic_d to the feature vector
-  featureVector = [simple_mov_avg, exp_mov_avg, momentum, stochastic_k, stochastic_d];
+  %featureVector = [simple_mov_avg, exp_mov_avg, momentum, stochastic_k, stochastic_d];
   
   %  ***********************************************
   %   6. Code for computing Commodity Channel Index
@@ -104,19 +104,19 @@ function featureVector = computeFeatures(data, days)
   %
 
   	mean_price = (closing_prices + high_prices + low_prices) / 3;
-        size(mean_price)
+        size(mean_price);
 	
         avg_mean_price = zeros(sz);
 	for i = 1:sz-9
 		 avg_mean_price(i) = mean(mean_price(i:i+days-1,1));
 	end
-        size(avg_mean_price)
+        size(avg_mean_price);
 
         mean_deviation = zeros(sz);
         for i = 1:sz-9
 		 mean_deviation(i) = mean(abs(mean_price(i:i+9,1) - avg_mean_price(i) * ones(days,1)) );
 	end
-	size(mean_deviation)
+	size(mean_deviation);
 	
 	% Problem with vector addition
 	
@@ -125,17 +125,30 @@ function featureVector = computeFeatures(data, days)
         % Vectorized implementation
 	        commodity_channel_index =  ( mean_price - avg_mean_price ) ./ (0.015 * mean_deviation);
 	%end
-	commodity_channel_index(1:10,1)
-        size(commodity_channel_index)
+	commodity_channel_index(1:10,1);
+        size(commodity_channel_index);
 
 	% Add commodity_channel_index to the feature vector
-	featureVector = [simple_mov_avg, exp_mov_avg, momentum, stochastic_k, stochastic_d, commodity_channel_index];
+	%featureVector = [simple_mov_avg, exp_mov_avg, momentum, stochastic_k, stochastic_d, commodity_channel_index];
+  
 
   %  ***********************************************
   %   7. Code for Computing accumulation/distribution oscillator
   %
   %
-  acc_dis_oscillator = zeros(sz)
-  acc_dis_oscillator = high_prices(1:sz(1)-1,1) - closing_prices(2:end,1) ./ ( high_prices(1:sz(1)-1,1) - low_prices(1:sz(1)-1,1) );
-  size(acc_dis_oscillator)
+
+  acc_dis_oscillator = zeros(sz);
+  acc_dis_oscillator = (high_prices(1:sz(1)-1,1) - closing_prices(2:end,1)) ./ ( high_prices(1:sz(1)-1,1) - low_prices(1:sz(1)-1,1) );
+  acc_dis_oscillator = [acc_dis_oscillator;0];
+  acc_dis_oscillator(1) == (high_prices(1) - closing_prices(2)) / (high_prices(1) - low_prices(1));
+  size(acc_dis_oscillator);
+
+  % Add acc_dis_oscillator to the feature vector
+  featureVector = [simple_mov_avg, exp_mov_avg, momentum, stochastic_k, stochastic_d, commodity_channel_index, acc_dis_oscillator];
+
+
+  %  ***********************************************
+  %   7. Code for Computing Larry William's R%
+  %
+  %
 end
