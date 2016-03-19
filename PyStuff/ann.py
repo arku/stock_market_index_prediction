@@ -32,65 +32,65 @@ def remove_nan(input_dataset):
 # Code starts here
 
 #Creates a dataframe from the dataset(technical indicators)
-input_dataset = pd.read_csv('new_features.csv')
+input_dataset = pd.read_csv('nifty50_features.csv')
 print type(input_dataset)
 print "First few rows of the dataset:"
 print input_dataset.head()
 print "Dataset size:", input_dataset.shape
 
 #Remove NaN
-input_dataset = remove_nan(input_dataset)
+dataset = remove_nan(input_dataset)
+print "Done with preprocessing\n*********************"
 
+print "Loading input data:\n***********************************"
+col = dataset.shape[1]
 
-#Creating input and target numpy arrays
-'''input_array = numpy.genfromtxt('new_features.csv', delimiter=",", names=True)
-input_array = Imputer(missing_values='NaN', strategy='most_frequent', axis=0).fit_transform(input_array)
+print "No.of columns", col
 
-target_array = numpy.genfromtxt('nifty50.csv', delimiter=",")
-target_array =  target_array[:,1]
+input_dataset = dataset.iloc[:,0:col-1]
+#print input_dataset.shape[1]
+#print input_dataset
 
-#print "Read " + str(len(input_array)) + " rows of data"
-#assert len(target_array) == len(input_array)
+print "Loading target data:\n***********************************"
+target_dataset = dataset.iloc[:,col-1]
+#print "Checking target_dataset", target_dataset
 
-print input_array.shape
-print target_array.shape
+#Converting dataframes to numpy arrays
+input_array = input_dataset.as_matrix()
+output_array = target_dataset.as_matrix()
+print type(input_array), type(output_array)
 
-print numpy.any(numpy.isnan(input_array))
-print numpy.any(numpy.isinf(input_array))
+#Checking for infinity and NaN values in the input and output arrays
 
-#preprocessing
-imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
-
+#print numpy.isnan(input_array).any()
+#print numpy.isnan(output_array).any()
+#print numpy.isinf(input_array).any()
+#print numpy.isinf(output_array).any()
+#First Model
 #Random Forest Regression
-
-input_dataset = pd.read_csv('features.csv')
-print input_dataset["SMA"]
+####
+###
+##
+#
+print input_array.shape, output_array.shape
 reg = RandomForestRegressor(n_estimators=10)
-#reg.fit(input_array, target_array)
-#print reg.predict([7876.94, 7876.94, 201.25, 96.0895023003,	89.5191739429,	97.5470278405,	0.4175298805, 3.9104976997	, 1.705969706])
+reg.fit(input_array, output_array)
+print reg.predict([7876.94, 7876.94, 201.25, 96.0895023003,	89.5191739429,	97.5470278405,	0.4175298805, 3.9104976997	, 1.705969706, 41.29775641025662])
 
 
 #Artifical Neural Network
 
 ann_network = Regressor(layers= [Layer("Linear", units=10), Layer("Tanh", units=200), Layer("Linear", units=1)], learning_rate=0.0001, n_iter=10)
 
-input_array[input_array == numpy.inf] = 0
-input_array[input_array == numpy.nan] = 0
-print numpy.any(numpy.isinf(input_array))
-print numpy.any(numpy.isnan(input_array))
-
-#ann_network.fit(input_array, target_array)
-
-
-#print ann_network.predict([7876.94, 7876.94, 201.25, 96.0895023003,	89.5191739429,	97.5470278405,	0.4175298805, 3.9104976997	, 1.705969706])
+ann_network.fit(input_array, output_array)
+print ann_network.predict([7876.94, 7876.94, 201.25, 96.0895023003,	89.5191739429, 97.5470278405, 0.4175298805, 3.9104976997, 1.705969706, 41.2977564])
 
 
 #SVM Regression
 svregressor = SVR(kernel='rbf', C=1e3, degree=3)
-print input_array.shape, target_array.shape
-svregressor.fit(input_array, target_array)
-print svregressor.predict([7876.94, 7876.94, 201.25, 96.0895023003,	89.5191739429,	97.5470278405,	0.4175298805, 3.9104976997	, 1.705969706, 41.2977564103])
+print input_array.shape, output_array.shape
+svregressor.fit(input_array, output_array)
+print svregressor.predict([7876.94, 7876.94, 201.25, 96.0895023003,	89.5191739429, 97.5470278405, 0.4175298805, 3.9104976997, 1.705969706, 41.2977564103])
 
-plt.plot(input_array)
+#plt.plot(input_array)
 #plt.show()
-'''
